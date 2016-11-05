@@ -1,0 +1,27 @@
+{
+  "name": "json-flatten",
+  "version": "0.0.1",
+  "description": "flatten json",
+  "main": "json-flatten.js",
+  "scripts": {
+    "test": "tape test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mucbuc/json-flatten.git"
+  },
+  "author": "Mark Busenitz",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/mucbuc/json-flatten/issues"
+  },
+  "homepage": "https://github.com/mucbuc/json-flatten#readme",
+  "devDependencies": {
+    "tape": "*",
+    "expector": "*"
+  },
+  "dependencies": {
+    "traverjs": "*",
+    "commander": "*"
+  }
+}
