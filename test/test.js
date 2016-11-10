@@ -18,7 +18,7 @@ function testTransform( key, prop ) {
   return t;
 }
 
-test.only( 'single element', (t) => {
+test( 'single element', (t) => {
 
   const e = new Expector(t)
     , obj = { a : 2 }; 

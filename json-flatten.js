@@ -14,8 +14,6 @@ function flatten(obj, propRegex, transform ) {
 
   return new Promise( (resolve, reject) => {
 
-    console.log( '**', obj ); 
-
     if (  typeof obj === 'number'
       ||  typeof obj === 'string') {
       resolve( obj ); 
@@ -24,8 +22,6 @@ function flatten(obj, propRegex, transform ) {
     
     let result = {};
     traverse( obj, ( p, next ) => {
-
-      console.log( '*', p ); 
 
       const key = Object.keys( p )[0];
   
