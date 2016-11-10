@@ -48,6 +48,21 @@ test( 'single array', (t) => {
     });
 });
 
+test.only( 'single object', (t) => {
+
+  const e = new Expector(t)
+    , obj = { a : { b: 2 } }; 
+
+    e.expect( JSON.stringify( { b: 2 } ) ); 
+    flatten( obj, /a/, testTransform )
+    .then( (result) => {
+      e.emit( result ).check(); 
+    })
+    .catch( (err) => {
+      e.emit( err ); 
+    });
+});
+
 test( 'simplest case', (t) => {
   const e = new Expector(t)
     , obj = { a: { p: 2 } };
