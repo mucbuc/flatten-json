@@ -12,19 +12,13 @@ const test = require( 'tape' )
   , Expector = require( 'expector' ).SeqExpector
   , flatten = require( '../json-flatten.js' );
 
-function testTransform( key, prop ) {
-  var t = {};
-  t[key] = prop; 
-  return t;
-}
-
 test( 'single element', (t) => {
 
   const e = new Expector(t)
     , obj = { a : 2 }; 
 
     e.expect( JSON.stringify( 2 ) ); 
-    flatten( obj, /a/, testTransform )
+    flatten( obj, /a/ )
     .then( (result) => {
       e.emit( result ).check(); 
     })
@@ -39,7 +33,7 @@ test( 'single array', (t) => {
     , obj = { a : [1, 2] }; 
 
     e.expect( JSON.stringify( [1, 2] ) ); 
-    flatten( obj, /a/, testTransform )
+    flatten( obj, /a/ )
     .then( (result) => {
       e.emit( result ).check(); 
     })
@@ -54,7 +48,7 @@ test( 'single object', (t) => {
     , obj = { a : { b: 2 } }; 
 
     e.expect( JSON.stringify( { b: 2 } ) ); 
-    flatten( obj, /a/, testTransform )
+    flatten( obj, /a/ )
     .then( (result) => {
       e.emit( result ).check(); 
     })
@@ -68,7 +62,7 @@ test( 'simplest case', (t) => {
     , obj = { a: { p: 2 } };
   
   e.expect( JSON.stringify( { p: 2 } ) ); 
-  flatten( obj, /a/, testTransform )
+  flatten( obj, /a/ )
   .then( (result) => { 
     e.emit( result ).check(); 
   });
@@ -81,7 +75,7 @@ test( 'transform composite', (t) => {
     , obj = { a: { p: 2 }, p: 1 };
   
   e.expect( JSON.stringify( { p: 2 } ) ); 
-  flatten( obj, /a/, testTransform )
+  flatten( obj, /a/ )
   .then( (result) => { 
     e.emit( result ).check(); 
   });
@@ -94,7 +88,7 @@ test( 'composite objects', (t) => {
  
   e.expect( JSON.stringify( { p : 3 } ) );
 
-  flatten( obj, /a/, testTransform )
+  flatten( obj, /a/ )
   .then( (result) => { 
     e.emit( result ).check();
   });
@@ -106,7 +100,7 @@ test( 'nested objects', (t) => {
 
   e.expect( JSON.stringify( { a: {p : 3}, q: 2 } ) ); 
 
-  flatten( obj, /a/, testTransform )
+  flatten( obj, /a/ )
   .then( (result) => { 
     e.emit( result ).check();
   });

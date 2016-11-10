@@ -18,13 +18,12 @@ function flatten(obj, propRegex, transform ) {
     traverse( obj, ( p, next ) => {
       const key = Object.keys( p )[0];
       if (key.match(propRegex)) {
-        result = obj[key];
+        result = transform( key, obj[key] );
         next();
       }
       else {
         flatten(obj[key], propRegex, transform )
         .then( (sub) => {
-//          console.log( 'sub:', sub );
           result[key] = sub;
           next(); 
         })
