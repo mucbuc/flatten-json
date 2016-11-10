@@ -29,6 +29,10 @@ function flatten(obj, propRegex, transform ) {
         if (!Array.isArray(obj[key])) {
           flatten( obj[key], propRegex, transform )
           .then( (o) => {
+
+
+            //which one 
+/*            
             if (typeof o === 'object') {
               for (var p in o) {
                 result[p] = transform( key, o[p] )
@@ -37,6 +41,10 @@ function flatten(obj, propRegex, transform ) {
             else {
               result = o;
             }
+*/ 
+
+
+            result = o;
             next();
           })
           .catch( (err) => {
@@ -56,7 +64,7 @@ function flatten(obj, propRegex, transform ) {
             result[key].push(obj[key]);
           }
           else {
-            result[key] = [ result[key], obj[key] ];
+            //result[key] = [ result[key], obj[key] ];
           }
         }
         else 

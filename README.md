@@ -57,3 +57,7 @@ example:
 recursive exceptions:
 { a: { a: 1 } }					=> { a: 1 } 	=> 1
 
+
+//
+{ a: { p: 2 }, p : 1 } => [ p: [ { a: 2 }, 1 ]
+
