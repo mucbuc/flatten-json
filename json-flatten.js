@@ -16,15 +16,26 @@ function flatten(obj, propRegex, transform ) {
 
     var result = {};
     traverse( obj, ( p, next ) => {
+
       const key = Object.keys( p )[0];
+  
       if (key.match(propRegex)) {
-        flatten( obj[key], propRegex, transform )
-        .then( (o) => {
-          for (var p in o) { 
-            result[p] = transform( key, o[p] )
-          }
-          next();
-        });
+        
+
+
+        if (!Array.isArray(obj[key])) {
+          flatten( obj[key], propRegex, transform )
+          .then( (o) => {
+            for (var p in o) {
+              result[p] = transform( key, o[p] )
+            }
+            next();
+          });
+        }
+        else {
+          result[key] = obj[key]; 
+          next(); 
+        }
       }
       else
       {
@@ -82,6 +93,7 @@ else {
       , fileName = program.args[1];
 
     fs.readFile( fileName, (err, data) => {
+
       if (err) throw err; 
       flatten( JSON.parse(data), regexp, transform )
       .then( (result) => {

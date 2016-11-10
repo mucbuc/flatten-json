@@ -1,6 +1,12 @@
 #!/usr/bin/env node
 
-'use strict'; 
+/*
+{ a: [ 1, 2 ] } => { a: [ 1, 2 ] }   
+{ a: { a: 2 } } => { a: { a: 2 } }
+{ q: { a: 1 }, p: { a: 2 } } => a: [ {q : 1}, {p: 2} ]
+*/ 
+
+'use strict';
 
 const test = require( 'tape' )
   , Expector = require( 'expector' ).SeqExpector
@@ -14,14 +20,26 @@ function testTransform( key, prop ) {
 
 test( 'simplest case', (t) => {
   const e = new Expector(t)
-    , obj = { a: { p: 2 }, p: 1 };
- 
-  e.expect( JSON.stringify( { p: [ { a: 2 }, 1 ] } ) ); 
+    , obj = { a: { p: 2 } };
+  
+  e.expect( JSON.stringify( { p: { a: 2 } } ) ); 
   flatten( obj, /a/, testTransform )
   .then( (result) => { 
     e.emit( result ).check(); 
   });
 });
+
+test( 'transform composite', (t) => {
+
+  const e = new Expector(t)
+    , obj = { a: { p: 2 }, p: 1 };
+  
+  e.expect( JSON.stringify( { p: [ { a: 2 }, 1 ] } ) ); 
+  flatten( obj, /a/, testTransform )
+  .then( (result) => { 
+    e.emit( result ).check(); 
+  });
+}); 
 
 test( 'composite objects', (t) => {
   const e = new Expector(t)
@@ -58,3 +76,15 @@ test( 'defaulTransform', (t) => {
     e.emit( result ).check();
   });
 });
+
+test( 'transform array', (t) => {
+  const e = new Expector(t)
+    , obj = { a: [ 1, 2 ] };
+
+  e.expect( JSON.stringify( { a: [ 1, 2 ] } ) );
+  flatten( obj, /a/)
+  .then( (result) => { 
+    e.emit( result ).check();
+  });
+});
+
