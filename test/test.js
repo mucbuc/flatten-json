@@ -142,3 +142,15 @@ test( 'more transform two', (t) => {
     e.emit( result ).check();
   });
 });
+
+test( 'one more', (t) => {
+  const e = new Expector(t)
+    , obj = { x: { a: [3, 2] } };
+
+  e.expect( JSON.stringify( { x: [3, 2] } ) );
+
+  flatten( obj, /a/)
+  .then( (result) => { 
+    e.emit( result ).check();
+  });
+});
