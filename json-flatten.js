@@ -14,22 +14,37 @@ function flatten(obj, propRegex, transform ) {
 
   return new Promise( (resolve, reject) => {
 
-    var result = {};
+    console.log( '**', obj ); 
+
+    if (  typeof obj === 'number'
+      ||  typeof obj === 'string') {
+      resolve( obj ); 
+      return;
+    }
+    
+    let result = {};
     traverse( obj, ( p, next ) => {
+
+      console.log( '*', p ); 
 
       const key = Object.keys( p )[0];
   
       if (key.match(propRegex)) {
-        
-
-
         if (!Array.isArray(obj[key])) {
           flatten( obj[key], propRegex, transform )
           .then( (o) => {
-            for (var p in o) {
-              result[p] = transform( key, o[p] )
+            if (typeof o === 'object') {
+              for (var p in o) {
+                result[p] = transform( key, o[p] )
+              }
+            }
+            else {
+              result = o;
             }
             next();
+          })
+          .catch( (err) => {
+            console.log( 'error', err ); 
           });
         }
         else {

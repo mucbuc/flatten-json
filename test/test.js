@@ -18,6 +18,21 @@ function testTransform( key, prop ) {
   return t;
 }
 
+test.only( 'single element', (t) => {
+
+  const e = new Expector(t)
+    , obj = { a : 2 }; 
+
+    e.expect( JSON.stringify( 2 ) ); 
+    flatten( obj, /a/, testTransform )
+    .then( (result) => {
+      e.emit( result ).check(); 
+    })
+    .catch( (err) => {
+      e.emit( err ); 
+    });
+});
+
 test( 'simplest case', (t) => {
   const e = new Expector(t)
     , obj = { a: { p: 2 } };
