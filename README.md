@@ -48,6 +48,7 @@ example:
 { a: 1 }		 				=> 1						// number
 { a: [1, 2] } 					=> [1, 2]					// array 
 { a: { b: 1 } } 				=> { b: 1 }					// object
+{ a: { p: 2 }, p : 1 } 			=> { p: 2 }
 
 { x: { a: 2 } } 				=> { x: 2 }					// object
 { x: { a: 2 }, y: { a: 3 } } 	=> { x: 2, y : 3 }			// object
@@ -58,6 +59,4 @@ recursive exceptions:
 { a: { a: 1 } }					=> { a: 1 } 	=> 1
 
 
-//
-{ a: { p: 2 }, p : 1 } => [ p: [ { a: 2 }, 1 ]
 
