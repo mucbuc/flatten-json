@@ -24,7 +24,10 @@ function flatten(obj, propRegex, transform ) {
       else {
         flatten(obj[key], propRegex, transform )
         .then( (sub) => {
-          result[key] = sub;
+          if (  typeof sub !== 'object'
+            ||  Object.keys(sub).length) {
+            result[key] = sub;
+          }
           next(); 
         })
         .catch( () => {

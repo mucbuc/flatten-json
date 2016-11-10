@@ -117,3 +117,28 @@ test( 'transform', (t) => {
     e.emit( result ).check();
   });
 });
+
+test( 'more transform', (t) => {
+  const e = new Expector(t)
+    , obj = { x: { a: 2 }, y: { a: 3 } };
+
+  e.expect( JSON.stringify( { x: 2, y: 3 } ) );
+
+  flatten( obj, /a/)
+  .then( (result) => { 
+    e.emit( result ).check();
+  });
+});
+
+
+test( 'more transform two', (t) => {
+  const e = new Expector(t)
+    , obj = { x: { a: 2 }, y: { b: 3 } };
+
+  e.expect( JSON.stringify( { x: 2 } ) );
+
+  flatten( obj, /a/)
+  .then( (result) => { 
+    e.emit( result ).check();
+  });
+});
