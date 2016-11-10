@@ -33,6 +33,21 @@ test( 'single element', (t) => {
     });
 });
 
+test( 'single array', (t) => {
+
+  const e = new Expector(t)
+    , obj = { a : [1, 2] }; 
+
+    e.expect( JSON.stringify( [1, 2] ) ); 
+    flatten( obj, /a/, testTransform )
+    .then( (result) => {
+      e.emit( result ).check(); 
+    })
+    .catch( (err) => {
+      e.emit( err ); 
+    });
+});
+
 test( 'simplest case', (t) => {
   const e = new Expector(t)
     , obj = { a: { p: 2 } };
@@ -91,15 +106,3 @@ test( 'defaulTransform', (t) => {
     e.emit( result ).check();
   });
 });
-
-test( 'transform array', (t) => {
-  const e = new Expector(t)
-    , obj = { a: [ 1, 2 ] };
-
-  e.expect( JSON.stringify( { a: [ 1, 2 ] } ) );
-  flatten( obj, /a/)
-  .then( (result) => { 
-    e.emit( result ).check();
-  });
-});
-

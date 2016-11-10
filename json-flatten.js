@@ -44,7 +44,8 @@ function flatten(obj, propRegex, transform ) {
           });
         }
         else {
-          result[key] = obj[key]; 
+          //result[key] = obj[key]; 
+          result = obj[key];
           next(); 
         }
       }
