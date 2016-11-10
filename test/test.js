@@ -88,7 +88,7 @@ test( 'transform composite', (t) => {
 }); 
 
 
-test.skip( 'composite objects', (t) => {
+test( 'composite objects', (t) => {
   const e = new Expector(t)
     , obj = { a: {p : 3}, q: 2 };
  
