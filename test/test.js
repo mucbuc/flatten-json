@@ -100,7 +100,6 @@ test( 'composite objects', (t) => {
   });
 });
 
-
 test( 'nested objects', (t) => {
   const e = new Expector(t)
     , obj = { a: { a: {p : 3}, q: 2 }, p: 1 };
@@ -113,11 +112,11 @@ test( 'nested objects', (t) => {
   });
 });
 
-test( 'defaulTransform', (t) => {
+test( 'transform', (t) => {
   const e = new Expector(t)
-    , obj = { a: { p: 2 }, p: 1 };
+    , obj = { x: { a: 2 } };
 
-  e.expect( JSON.stringify( { p: 2 } ) );
+  e.expect( JSON.stringify( { x: 2 } ) );
 
   flatten( obj, /a/)
   .then( (result) => { 

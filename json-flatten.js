@@ -14,30 +14,23 @@ function flatten(obj, propRegex, transform ) {
 
   return new Promise( (resolve, reject) => {
 
-    if (  typeof obj === 'number'
-      ||  typeof obj === 'string') {
-      resolve( obj ); 
-      return;
-    }
-
     let result = {};
     traverse( obj, ( p, next ) => {
-
       const key = Object.keys( p )[0];
-  
       if (key.match(propRegex)) {
-        if (!Array.isArray(obj[key])) {
-          result = obj[key];
-          next();
-        }
-        else {
-          result = obj[key];
-          next(); 
-        }
-      }
-      else
-      {
+        result = obj[key];
         next();
+      }
+      else {
+        flatten(obj[key], propRegex, transform )
+        .then( (sub) => {
+//          console.log( 'sub:', sub );
+          result[key] = sub;
+          next(); 
+        })
+        .catch( () => {
+          next();
+        }); 
       }
     })
     .then( () => {
