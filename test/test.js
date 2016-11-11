@@ -1,156 +1,33 @@
 #!/usr/bin/env node
 
-/*
-{ a: [ 1, 2 ] } => { a: [ 1, 2 ] }   
-{ a: { a: 2 } } => { a: { a: 2 } }
-{ q: { a: 1 }, p: { a: 2 } } => a: [ {q : 1}, {p: 2} ]
-*/ 
-
 'use strict';
 
-const test = require( 'tape' )
+const tapeTest = require( 'tape' )
   , Expector = require( 'expector' ).SeqExpector
-  , flatten = require( '../json-flatten.js' );
+  , flatten = require( '../json-flatten.js' ); 
 
-test( 'single element', (t) => {
-
-  const e = new Expector(t)
-    , obj = { a : 2 }; 
-
-    e.expect( JSON.stringify( 2 ) ); 
-    flatten( obj, /a/ )
+function test(name, input, regexp, expected) {
+  tapeTest( name, (t) => {
+    const e = new Expector(t); 
+    e.expect( JSON.stringify( expected ) ); 
+    flatten( input, regexp )
     .then( (result) => {
       e.emit( result ).check(); 
     })
     .catch( (err) => {
       e.emit( err ); 
     });
-});
-
-test( 'single array', (t) => {
-
-  const e = new Expector(t)
-    , obj = { a : [1, 2] }; 
-
-    e.expect( JSON.stringify( [1, 2] ) ); 
-    flatten( obj, /a/ )
-    .then( (result) => {
-      e.emit( result ).check(); 
-    })
-    .catch( (err) => {
-      e.emit( err ); 
-    });
-});
-
-test( 'single object', (t) => {
-
-  const e = new Expector(t)
-    , obj = { a : { b: 2 } }; 
-
-    e.expect( JSON.stringify( { b: 2 } ) ); 
-    flatten( obj, /a/ )
-    .then( (result) => {
-      e.emit( result ).check(); 
-    })
-    .catch( (err) => {
-      e.emit( err ); 
-    });
-});
-
-test( 'simplest case', (t) => {
-  const e = new Expector(t)
-    , obj = { a: { p: 2 } };
-  
-  e.expect( JSON.stringify( { p: 2 } ) ); 
-  flatten( obj, /a/ )
-  .then( (result) => { 
-    e.emit( result ).check(); 
   });
-});
+}
 
-
-test( 'transform composite', (t) => {
-
-  const e = new Expector(t)
-    , obj = { a: { p: 2 }, p: 1 };
-  
-  e.expect( JSON.stringify( { p: 2 } ) ); 
-  flatten( obj, /a/ )
-  .then( (result) => { 
-    e.emit( result ).check(); 
-  });
-}); 
-
-
-test( 'composite objects', (t) => {
-  const e = new Expector(t)
-    , obj = { a: {p : 3}, q: 2 };
- 
-  e.expect( JSON.stringify( { p : 3 } ) );
-
-  flatten( obj, /a/ )
-  .then( (result) => { 
-    e.emit( result ).check();
-  });
-});
-
-test( 'nested objects', (t) => {
-  const e = new Expector(t)
-    , obj = { a: { a: {p : 3}, q: 2 }, p: 1 };
-
-  e.expect( JSON.stringify( { a: {p : 3}, q: 2 } ) ); 
-
-  flatten( obj, /a/ )
-  .then( (result) => { 
-    e.emit( result ).check();
-  });
-});
-
-test( 'transform', (t) => {
-  const e = new Expector(t)
-    , obj = { x: { a: 2 } };
-
-  e.expect( JSON.stringify( { x: 2 } ) );
-
-  flatten( obj, /a/)
-  .then( (result) => { 
-    e.emit( result ).check();
-  });
-});
-
-test( 'more transform', (t) => {
-  const e = new Expector(t)
-    , obj = { x: { a: 2 }, y: { a: 3 } };
-
-  e.expect( JSON.stringify( { x: 2, y: 3 } ) );
-
-  flatten( obj, /a/)
-  .then( (result) => { 
-    e.emit( result ).check();
-  });
-});
-
-
-test( 'more transform two', (t) => {
-  const e = new Expector(t)
-    , obj = { x: { a: 2 }, y: { b: 3 } };
-
-  e.expect( JSON.stringify( { x: 2 } ) );
-
-  flatten( obj, /a/)
-  .then( (result) => { 
-    e.emit( result ).check();
-  });
-});
-
-test( 'one more', (t) => {
-  const e = new Expector(t)
-    , obj = { x: { a: [3, 2] } };
-
-  e.expect( JSON.stringify( { x: [3, 2] } ) );
-
-  flatten( obj, /a/)
-  .then( (result) => { 
-    e.emit( result ).check();
-  });
-});
+test( 'single element', { a : 2 }, /a/, 2 );
+test( 'single array', { a : [1, 2] }, /a/, [1, 2] ); 
+test( 'single object', { a : { b: 2 } }, /a/, { b: 2 } );
+test( 'simplest case', { a: { p: 2 } }, /a/, { p: 2 } );
+test( 'transform composite', { a: { p: 2 }, p: 1 }, /a/, { p: 2 } );
+test( 'composite objects', { a: {p : 3}, q: 2 }, /a/, { p : 3 } );
+test( 'nested objects', { a: { a: {p : 3}, q: 2 }, p: 1 }, /a/, { a: {p : 3}, q: 2 } );
+test( 'transform', { x: { a: 2 } }, /a/, { x: 2 } );
+test( 'more transform', { x: { a: 2 }, y: { a: 3 } }, /a/, { x: 2, y: 3 } );
+test( 'more transform two', { x: { a: 2 }, y: { b: 3 } }, /a/, { x: 2 } );
+test( 'one more', { x: { a: [3, 2] } }, /a/, { x: [3, 2] } );

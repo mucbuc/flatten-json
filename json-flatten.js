@@ -74,7 +74,6 @@ else {
       , fileName = program.args[1];
 
     fs.readFile( fileName, (err, data) => {
-
       if (err) throw err; 
       flatten( JSON.parse(data), regexp, transform )
       .then( (result) => {
