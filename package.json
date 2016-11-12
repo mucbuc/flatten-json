@@ -1,6 +1,6 @@
 {
   "name": "json-flatten",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "flatten json",
   "main": "json-flatten.js",
   "scripts": {
