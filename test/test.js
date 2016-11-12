@@ -37,7 +37,8 @@ test( 'transform again', { a: 1 }, /a/, { a : 1 }, (key, value) => {
   return t; 
 });
 
-test( 'transform with source', 
+test( 'source', 
   { modA: { sources: [1, 2] }, modB: { sources: [3, 4] } }, 
   /sources/, 
-  {modA:[ 1, 2 ], modB: [ 3, 4 ] });
+  {modA:[ 1, 2 ], modB: [ 3, 4 ] }
+);
