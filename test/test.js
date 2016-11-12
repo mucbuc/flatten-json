@@ -1,60 +1,44 @@
 #!/usr/bin/env node
 
-'use strict'; 
+'use strict';
 
-const test = require( 'tape' )
+const tapeTest = require( 'tape' )
   , Expector = require( 'expector' ).SeqExpector
-  , flatten = require( '../json-flatten.js' );
+  , flatten = require( '../json-flatten.js' ); 
 
-function testTransform( key, prop ) {
-  var t = {};
-  t[key] = prop; 
-  return t;
+function test(name, input, regexp, expected, transform) {
+  tapeTest( name, (t) => {
+    const e = new Expector(t); 
+    e.expect( JSON.stringify( expected ) ); 
+    flatten( input, regexp, transform )
+    .then( (result) => {
+      e.emit( result ).check(); 
+    })
+    .catch( (err) => {
+      e.emit( err ); 
+    });
+  });
 }
 
-test( 'simplest case', (t) => {
-  const e = new Expector(t)
-    , obj = { a: { p: 2 }, p: 1 };
- 
-  e.expect( JSON.stringify( { p: [ { a: 2 }, 1 ] } ) ); 
-  flatten( obj, /a/, testTransform )
-  .then( (result) => { 
-    e.emit( result ).check(); 
-  });
+test( 'single element', { a : 2 }, /a/, 2 );
+test( 'single array', { a : [1, 2] }, /a/, [1, 2] ); 
+test( 'single object', { a : { b: 2 } }, /a/, { b: 2 } );
+test( 'simplest case', { a: { p: 2 } }, /a/, { p: 2 } );
+test( 'transform composite', { a: { p: 2 }, p: 1 }, /a/, { p: 2 } );
+test( 'composite objects', { a: {p : 3}, q: 2 }, /a/, { p : 3 } );
+test( 'nested objects', { a: { a: {p : 3}, q: 2 }, p: 1 }, /a/, { a: {p : 3}, q: 2 } );
+test( 'transform', { x: { a: 2 } }, /a/, { x: 2 } );
+test( 'more transform', { x: { a: 2 }, y: { a: 3 } }, /a/, { x: 2, y: 3 } );
+test( 'more transform two', { x: { a: 2 }, y: { b: 3 } }, /a/, { x: 2 } );
+test( 'one more', { x: { a: [3, 2] } }, /a/, { x: [3, 2] } );
+test( 'transform again', { a: 1 }, /a/, { a : 1 }, (key, value) => {
+  let t = {};
+  t[key] = value;
+  return t; 
 });
 
-test( 'composite objects', (t) => {
-  const e = new Expector(t)
-    , obj = { a: {p : 3}, q: 2 };
- 
-  e.expect( JSON.stringify( { p : { a : 3 }, q : 2 } ) );
-
-  flatten( obj, /a/, testTransform )
-  .then( (result) => { 
-    e.emit( result ).check();
-  });
-});
-
-test( 'nested objects', (t) => {
-  const e = new Expector(t)
-    , obj = { a: { a: {p : 3}, q: 2 }, p: 1 };
-
-  e.expect( JSON.stringify( { p: [ { a: { a: 3 } }, 1 ], q: { a: 2 } } ) ); 
-
-  flatten( obj, /a/, testTransform )
-  .then( (result) => { 
-    e.emit( result ).check();
-  });
-});
-
-test( 'defaulTransform', (t) => {
-  const e = new Expector(t)
-    , obj = { a: { p: 2 }, p: 1 };
-
-  e.expect( JSON.stringify( { p: [ 2, 1 ] } ) );
-
-  flatten( obj, /a/)
-  .then( (result) => { 
-    e.emit( result ).check();
-  });
-});
+test( 'source', 
+  { modA: { sources: [1, 2] }, modB: { sources: [3, 4] } }, 
+  /sources/, 
+  {modA:[ 1, 2 ], modB: [ 3, 4 ] }
+);

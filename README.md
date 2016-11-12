@@ -1,12 +1,6 @@
-# json-flatten
+# json-flatten WIP don't use
 
 flatten JSON properties matching given regex
-
-####example
-`cat test.json`   
-`{"a":{"p":2},"p":1}`   
-`json-flatten /a/ test.json`   
-`{"p":[2,1]}`    
 
 ####usage
 ```
@@ -18,5 +12,6 @@ flatten JSON properties matching given regex
     -V, --version               output the version number
     -t, --transform [function]  specify transform. default = ( key, value ) => { return value; }
 ```
+
 
 
