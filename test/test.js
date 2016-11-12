@@ -6,11 +6,11 @@ const tapeTest = require( 'tape' )
   , Expector = require( 'expector' ).SeqExpector
   , flatten = require( '../json-flatten.js' ); 
 
-function test(name, input, regexp, expected) {
+function test(name, input, regexp, expected, transform) {
   tapeTest( name, (t) => {
     const e = new Expector(t); 
     e.expect( JSON.stringify( expected ) ); 
-    flatten( input, regexp )
+    flatten( input, regexp, transform )
     .then( (result) => {
       e.emit( result ).check(); 
     })
@@ -31,3 +31,8 @@ test( 'transform', { x: { a: 2 } }, /a/, { x: 2 } );
 test( 'more transform', { x: { a: 2 }, y: { a: 3 } }, /a/, { x: 2, y: 3 } );
 test( 'more transform two', { x: { a: 2 }, y: { b: 3 } }, /a/, { x: 2 } );
 test( 'one more', { x: { a: [3, 2] } }, /a/, { x: [3, 2] } );
+test( 'transform again', { a: 1 }, /a/, { a : 1 }, (key, value) => {
+  let t = {};
+  t[key] = value;
+  return t; 
+});
