@@ -7,8 +7,8 @@ const traverse = require( 'traverjs' );
 function flatten(obj, propRegex, transform ) {
   
   if (typeof transform === 'undefined') {
-    transform = ( key, value ) => {
-      return value; 
+    transform = ( key, value, cb ) => {
+      cb( value ); 
     }; 
   }
 
@@ -18,8 +18,10 @@ function flatten(obj, propRegex, transform ) {
     traverse( obj, ( p, next ) => {
       const key = Object.keys( p )[0];
       if (key.match(propRegex)) {
-        result = transform( key, obj[key] );
-        next();
+        transform( key, obj[key], (r) => {
+          result = r;
+          next();
+        } );
       }
       else {
         flatten(obj[key], propRegex, transform )
