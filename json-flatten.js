@@ -56,9 +56,9 @@ else {
     , fs = require( 'fs' ); 
 
   program
-  .version( '0.0.0' )
+  .version( '0.0.3' )
   .usage( '[options] <regexp> <json file>')
-  .option( '-t, --transform [function]', 'specify transform. default = ( key, value ) => { return value; }' )
+  .option( '-t, --transform [function]', 'specify transform. default = ( key, value, cb ) => { cb( value ); }' )
   .parse( process.argv ); 
     
   if (program.transform) {
