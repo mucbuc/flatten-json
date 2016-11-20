@@ -10,7 +10,7 @@ flatten JSON properties matching given regex
 
     -h, --help                  output usage information
     -V, --version               output the version number
-    -t, --transform [function]  specify transform. default = ( key, value ) => { return value; }
+    -t, --transform [function]  specify transform. default = ( key, value, cb ) => { cb( value ); }
 ```
 
 
