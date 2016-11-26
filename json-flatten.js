@@ -2,9 +2,14 @@
 
 'use strict';
 
-const traverse = require( 'traverjs' );
+const traverse = require( 'traverjs' )
+  ,  path = require( 'path' ); 
 
-function flatten(obj, propRegex, transform ) {
+function flatten(obj, propRegex, transform, base) {
+  
+  if (typeof base === 'undefined') {
+    base = ''; 
+  }
   
   if (typeof transform === 'undefined') {
     transform = ( key, value, cb ) => {
@@ -16,15 +21,18 @@ function flatten(obj, propRegex, transform ) {
 
     let result = {};
     traverse( obj, ( p, next ) => {
+      
+
       const key = Object.keys( p )[0];
       if (key.match(propRegex)) {
-        transform( key, obj[key], (r) => {
+        transform( obj, obj[key], (r) => {
           result = r;
           next();
-        } );
+        }, base );
       }
       else {
-        flatten(obj[key], propRegex, transform )
+
+        flatten(obj[key], propRegex, transform, path.join( base, key ) )
         .then( (sub) => {
           if (  typeof sub !== 'object'
             ||  Object.keys(sub).length) {
