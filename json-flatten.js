@@ -25,7 +25,7 @@ function flatten(obj, propRegex, transform, base) {
 
       const key = Object.keys( p )[0];
       if (key.match(propRegex)) {
-        transform( obj, obj[key], (r) => {
+        transform( key, obj[key], (r) => {
           result = r;
           next();
         }, base );
