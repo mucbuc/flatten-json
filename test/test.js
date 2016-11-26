@@ -6,11 +6,11 @@ const tapeTest = require( 'tape' )
   , Expector = require( 'expector' ).SeqExpector
   , flatten = require( '../json-flatten.js' ); 
 
-function test(name, input, regexp, expected, transform) {
+function test(name, input, regexp, expected, transform, base) {
   tapeTest( name, (t) => {
     const e = new Expector(t); 
     e.expect( JSON.stringify( expected ) ); 
-    flatten( input, regexp, transform )
+    flatten( input, regexp, transform, base )
     .then( (result) => {
       e.emit( result ).check(); 
     })
@@ -40,3 +40,10 @@ test( 'source',
   /sources/, 
   {modA:[ 1, 2 ], modB: [ 3, 4 ] }
 );
+
+test( 'base', { a: 1 }, /a/, { 'base': 1 }, (key, value, cb, base) => {
+  cb( { [base] : value } );
+}, 'base'); 
+
+
+
