@@ -30,7 +30,7 @@ test( 'nested objects', { a: { a: {p : 3}, q: 2 }, p: 1 }, /a/, { a: {p : 3}, q:
 test( 'transform', { x: { a: 2 } }, /a/, { x: 2 } );
 test( 'more transform', { x: { a: 2 }, y: { a: 3 } }, /a/, { x: 2, y: 3 } );
 test( 'more transform two', { x: { a: 2 }, y: { b: 3 } }, /a/, { x: 2 } );
-//test( 'one more', { x: { a: [3, 2] } }, /a/, { x: [3, 2] } );
+test( 'one more', { x: { a: [3, 2] } }, /a/, { x: [3, 2] } );
 // test( 'transform again', { a: 1 }, /a/, { a : 1 }, (key, value, cb) => {
 //   cb( { [key]: value } ); 
 // });
