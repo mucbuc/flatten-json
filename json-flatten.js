@@ -25,18 +25,23 @@ function flatten(obj, propRegex, transform, base) {
       const key = Object.keys( p )[0];
       if (key.match(propRegex)) {
         transform( obj, obj[key], (r) => {
-          result = result.concat(r);
+          result = assign( result, r);
           next();
         }, base );
       }
       else {
         flatten(obj[key], propRegex, transform, path.join( base, key ) )
         .then( (sub) => {
-          result = result.concat(sub);
+          result = assign(result, sub);
           next(); 
         })
         .catch( next ); 
       }
+
+      function assign(a, b) {
+        return a.concat(b);
+      }
+
     })
     .then( () => {
       resolve( result );
