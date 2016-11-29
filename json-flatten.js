@@ -19,30 +19,39 @@ function flatten(obj, propRegex, transform, base) {
 
   return new Promise( (resolve, reject) => {
 
-    let result = {};
+    let result = { 'sources': [] };
     traverse( obj, ( p, next ) => {
       
-
       const key = Object.keys( p )[0];
       if (key.match(propRegex)) {
-        transform( key, obj[key], (r) => {
-          result = r;
+        transform( obj, obj[key], (r) => {
+          result.sources = result.sources.concat(r);
           next();
         }, base );
       }
       else {
 
+
+        // traverse( obj[key], (prop, nextProp) => {
+        //   const key = Object.keys(prop)[0]; 
+          
+        //   if (!key.match(propRegex))
+        //   {
+        //     result[key] = prop[key]; 
+        //   }
+        //   next(); 
+        // }); 
+
+
         flatten(obj[key], propRegex, transform, path.join( base, key ) )
         .then( (sub) => {
-          if (  typeof sub !== 'object'
-            ||  Object.keys(sub).length) {
-            result[key] = sub;
-          }
+          
+          
+
+          result.sources = result.sources.concat(sub.sources);
           next(); 
         })
-        .catch( () => {
-          next();
-        }); 
+        .catch( next ); 
       }
     })
     .then( () => {
