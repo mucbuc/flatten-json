@@ -2,9 +2,14 @@
 
 'use strict';
 
-const traverse = require( 'traverjs' );
+const traverse = require( 'traverjs' )
+  ,  path = require( 'path' ); 
 
-function flatten(obj, propRegex, transform ) {
+function flatten(obj, propRegex, transform, base) {
+  
+  if (typeof base === 'undefined') {
+    base = ''; 
+  }
   
   if (typeof transform === 'undefined') {
     transform = ( key, value, cb ) => {
@@ -14,28 +19,38 @@ function flatten(obj, propRegex, transform ) {
 
   return new Promise( (resolve, reject) => {
 
-    let result = {};
+    let result;
     traverse( obj, ( p, next ) => {
+      
       const key = Object.keys( p )[0];
       if (key.match(propRegex)) {
         transform( key, obj[key], (r) => {
-          result = r;
+          result = assign(result, r);
           next();
-        } );
+        }, base );
       }
       else {
-        flatten(obj[key], propRegex, transform )
+
+        flatten(obj[key], propRegex, transform, path.join( base, key ) )
         .then( (sub) => {
-          if (  typeof sub !== 'object'
-            ||  Object.keys(sub).length) {
-            result[key] = sub;
+
+          if (typeof result === 'undefined') {
+            result = {};
           }
+
+          result[key] = assign(result[key], sub);
           next(); 
         })
-        .catch( () => {
-          next();
-        }); 
+        .catch( next ); 
       }
+
+      function assign(a, b) {
+        if (typeof a === 'undefined') {
+          return b;
+        }
+        return Object.assign(a, b);
+      }
+
     })
     .then( () => {
       resolve( result );
