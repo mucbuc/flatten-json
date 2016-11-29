@@ -31,12 +31,12 @@ function flatten(obj, propRegex, transform, base) {
       }
       else {
 
-        if (typeof result === 'undefined') {
-          result = {};
-        }
-
         flatten(obj[key], propRegex, transform, path.join( base, key ) )
         .then( (sub) => {
+
+          if (typeof result === 'undefined') {
+            result = {};
+          }
 
           result[key] = assign(result[key], sub);
           next(); 
